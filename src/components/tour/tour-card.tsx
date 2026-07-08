@@ -1,13 +1,15 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { CardComponentProps } from "nextstepjs";
 import { Button } from "../ui/button";
 
 export function TourCard(props: CardComponentProps) {
+  const t = useTranslations("tour.controls");
   const isLastStep = props.currentStep === props.totalSteps - 1;
 
   return (
-    <div className="w-72 rounded-2xl border bg-popover p-4 text-popover-foreground shadow-lg">
+    <div className="w-80 rounded-2xl border bg-popover p-4 text-popover-foreground shadow-lg">
       <h2 className="text-sm font-semibold tracking-tight">
         {props.step.title}
       </h2>
@@ -24,16 +26,16 @@ export function TourCard(props: CardComponentProps) {
           <div className="ml-auto inline-flex items-center gap-1.5">
             {props.step.showSkip && props.skipTour && !isLastStep && (
               <Button size="sm" variant="ghost" onClick={props.skipTour}>
-                Skip
+                {t("skip")}
               </Button>
             )}
             {props.currentStep > 0 && (
               <Button size="sm" variant="outline" onClick={props.prevStep}>
-                Back
+                {t("back")}
               </Button>
             )}
             <Button size="sm" onClick={props.nextStep}>
-              {isLastStep ? "Done" : "Next"}
+              {isLastStep ? t("done") : t("next")}
             </Button>
           </div>
         </div>

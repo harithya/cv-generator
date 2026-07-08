@@ -2,7 +2,10 @@
 
 import { Download } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useIsClient } from "@/hooks/use-is-client";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useResumeDownload } from "@/hooks/use-resume-download";
 import { Button } from "../ui/button";
 import {
@@ -13,43 +16,55 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "../ui/popover";
+import { PlatformResumeDownloadDrawer } from "./platform-resume-download-drawer";
 import { PlatformResumeDownloadForm } from "./platform-resume-download-form";
 
 export function PlatformNavbarDownload() {
   const pathname = usePathname();
+  const isMobile = useIsMobile();
+  const isClient = useIsClient();
+  const t = useTranslations("platform.download");
   const { resume, generating, download } = useResumeDownload();
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  if (!pathname.includes("/editor/")) return null;
+  if (!pathname.includes("/editor/") || !isClient) return null;
+
+  if (isMobile) {
+    return (
+      <>
+        <Button
+          id="tour-download"
+          size="icon"
+          disabled={!resume}
+          onClick={() => setOpen(true)}
+        >
+          <Download />
+          <span className="sr-only">{t("srDownload")}</span>
+        </Button>
+        <PlatformResumeDownloadDrawer open={open} onOpenChange={setOpen} />
+      </>
+    );
+  }
 
   return (
-    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <PopoverTrigger
-        render={
-          <Button
-            id="tour-download"
-            disabled={!resume}
-            className="max-md:hidden"
-          />
-        }
-      >
-        <Download /> <span className="sr-only">Download</span> Résumé
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger render={<Button id="tour-download" disabled={!resume} />}>
+        <Download /> <span className="sr-only">{t("srDownload")}</span>{" "}
+        {t("trigger")}
       </PopoverTrigger>
       <PopoverContent align="end">
         <PopoverHeader>
-          <PopoverTitle>Download résumé</PopoverTitle>
-          <PopoverDescription>
-            Pick a format and name your file.
-          </PopoverDescription>
+          <PopoverTitle>{t("title")}</PopoverTitle>
+          <PopoverDescription>{t("description")}</PopoverDescription>
         </PopoverHeader>
 
         <PlatformResumeDownloadForm
-          key={`${resume?.id}-${popoverOpen}`}
+          key={`${resume?.id}-${open}`}
           defaultFileName={resume?.title ?? ""}
           generating={generating}
           onSubmit={(format, fileName) =>
             void download(format, fileName).then(
-              (done) => done && setPopoverOpen(false),
+              (done) => done && setOpen(false),
             )
           }
         />

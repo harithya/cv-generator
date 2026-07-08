@@ -1,10 +1,10 @@
 "use client";
 
+import { LanguageSwitcher } from "../shared/language-switcher";
 import { SidebarTrigger } from "../ui/sidebar";
 import { PlatformNavbarBreadcrumb } from "./platform-navbar-breadcrumb";
 import { PlatformNavbarChangelog } from "./platform-navbar-changelog";
 import { PlatformNavbarDownload } from "./platform-navbar-download";
-import { PlatformNavbarMobileMenu } from "./platform-navbar-mobile-menu";
 import { PlatformNavbarTheme } from "./platform-navbar-theme";
 
 export function PlatformNavbar() {
@@ -15,10 +15,12 @@ export function PlatformNavbar() {
         <PlatformNavbarBreadcrumb />
 
         <div className="inline-flex items-center gap-2 ml-auto">
-          <PlatformNavbarChangelog />
-          <PlatformNavbarTheme />
+          <div className="inline-flex items-center gap-2 max-lg:hidden">
+            <PlatformNavbarChangelog />
+            <PlatformNavbarTheme />
+          </div>
           <PlatformNavbarDownload />
-          <PlatformNavbarMobileMenu />
+          <LanguageSwitcher />
         </div>
       </nav>
     </header>
