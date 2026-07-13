@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useResumeStore } from "@/lib/store";
 import type { SkillsFormValues } from "../resume-form-adapter";
 
 const PROFICIENCY_LEVELS = [
@@ -32,6 +33,10 @@ export function EditorSectionSkillsFormItem(
   props: EditorSectionSkillsFormItemProps,
 ) {
   const t = useTranslations("editor.skills");
+  const showLevel = useResumeStore(
+    (state) =>
+      state.open?.sections.find((s) => s.type === "skills")?.showLevel ?? true,
+  );
 
   return (
     <SortableItem id={props.id} handleLabel={t("reorder")}>
@@ -64,27 +69,29 @@ export function EditorSectionSkillsFormItem(
           </Button>
         </div>
 
-        <Controller
-          control={props.control}
-          name={`skills.${props.index}.level`}
-          render={({ field }) => (
-            <Select
-              value={field.value || null}
-              onValueChange={(value) => field.onChange(value)}
-            >
-              <SelectTrigger className="w-[87.888%] md:w-36">
-                <SelectValue placeholder={t("proficiency")} />
-              </SelectTrigger>
-              <SelectContent>
-                {PROFICIENCY_LEVELS.map((level) => (
-                  <SelectItem key={level} value={level}>
-                    {level}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
+        {showLevel && (
+          <Controller
+            control={props.control}
+            name={`skills.${props.index}.level`}
+            render={({ field }) => (
+              <Select
+                value={field.value || null}
+                onValueChange={(value) => field.onChange(value)}
+              >
+                <SelectTrigger className="w-[87.888%] md:w-36">
+                  <SelectValue placeholder={t("proficiency")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {PROFICIENCY_LEVELS.map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        )}
 
         <Button
           type="button"
