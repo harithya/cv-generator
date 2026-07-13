@@ -5,7 +5,7 @@ import type { JSONContent } from "@tiptap/core";
  * governs object-store/index structure only. Bumped whenever a persisted field
  * shape changes; every bump gets a forward-only step in the migration ladder.
  */
-export const CURRENT_SCHEMA_VERSION = 12;
+export const CURRENT_SCHEMA_VERSION = 13;
 
 /** The language the rendered document's fixed labels (headings, dates) use. */
 export type ResumeLanguage = "en" | "id";
@@ -78,6 +78,13 @@ export interface Section {
    * non-grid sections; renderers default to a two-column grid when unset.
    */
   columns?: SectionColumns;
+  /**
+   * Presentation-only: whether the Skills section shows a proficiency level per
+   * entry. Skills-only; absent on other Section types. Renderers and the editor
+   * treat an unset value as `true`. Never affects a stored `level` value on an
+   * entry — toggling this only changes whether it's shown.
+   */
+  showLevel?: boolean;
   /**
    * Presentation variant for `custom` Sections only: `rich` (a single rich-text
    * body) or `list` (repeatable entries). Absent on core Sections; the custom

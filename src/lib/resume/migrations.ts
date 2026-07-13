@@ -444,6 +444,27 @@ const migrateV11toV12: Migration = (doc) => {
 };
 
 /**
+ * v12→v13: adds the presentation-only `showLevel` flag to the Skills section so
+ * proficiency levels can be hidden without losing any level a user already typed.
+ * Existing documents default to `true`, preserving their current display.
+ * Bail-safe: no Skills section means no-op; a Skills section that already carries
+ * a boolean `showLevel` is left untouched.
+ */
+const migrateV12toV13: Migration = (doc) => {
+  const next = structuredClone(doc);
+  const sections = Array.isArray(next.sections)
+    ? (next.sections as Array<Record<string, unknown>>)
+    : [];
+
+  const skills = sections.find((s) => s.type === "skills");
+  if (skills && typeof skills.showLevel !== "boolean") {
+    skills.showLevel = true;
+  }
+
+  return next;
+};
+
+/**
  * The migration ladder. Each key N is a forward-only step from version N to N+1.
  */
 const LADDER: Record<number, Migration> = {
@@ -458,6 +479,7 @@ const LADDER: Record<number, Migration> = {
   9: migrateV9toV10,
   10: migrateV10toV11,
   11: migrateV11toV12,
+  12: migrateV12toV13,
 };
 
 /** The persisted schemaVersion of a raw document; 0 when absent or malformed. */

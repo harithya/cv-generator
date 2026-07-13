@@ -425,6 +425,7 @@ export const SEED_RESUME: Resume = {
       type: "skills",
       title: "Skills",
       columns: 2,
+      showLevel: true,
       entries: [
         {
           id: "seed-skills-1",

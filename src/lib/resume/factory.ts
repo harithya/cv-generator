@@ -55,8 +55,11 @@ export function createEmptySection(type: SectionType): Section {
     title: schema.defaultTitle,
     entries: [],
   };
-  // The Skills grid is column-toggleable; new sections start two-column.
-  if (type === "skills") section.columns = 2;
+  // The Skills grid is column-toggleable, and levels show by default.
+  if (type === "skills") {
+    section.columns = 2;
+    section.showLevel = true;
+  }
   return section;
 }
 
