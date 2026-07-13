@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -9,21 +9,30 @@ import { type Locale, routing } from "@/i18n/routing";
 import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontMono = Geist_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 const OG_LOCALE: Record<Locale, string> = {
   en: "en_US",
   id: "id_ID",
+};
+
+const OG_IMAGE_ALT =
+  "Lanjut — free, local-first résumé builder that sails through applicant tracking systems";
+
+const OG_IMAGE = {
+  url: "/opengraph-image.png",
+  width: 1200,
+  height: 630,
+  alt: OG_IMAGE_ALT,
 };
 
 export function generateStaticParams() {
@@ -62,11 +71,13 @@ export async function generateMetadata(props: {
       title: t("title"),
       description: t("description"),
       locale: OG_LOCALE[locale],
+      images: [OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
+      images: [OG_IMAGE],
     },
     icons: {
       icon: [
@@ -104,10 +115,9 @@ export default async function RootLayout(props: {
       className={cn(
         "h-full",
         "antialiased",
-        geistSans.variable,
-        geistMono.variable,
+        fontSans.variable,
+        fontMono.variable,
         "font-sans",
-        inter.variable,
       )}
     >
       <body>
