@@ -104,6 +104,8 @@ export function isResumePreviewEmpty(preview: ResumePreview): boolean {
  */
 export function resumeToPreview(resume: Resume): ResumePreview {
   const summaryBody = sectionOfType(resume, "summary")?.entries[0]?.fields.body;
+  const skillsSection = sectionOfType(resume, "skills");
+  const showSkillLevel = skillsSection?.showLevel ?? true;
   const labels = RESUME_LABELS[resume.language];
   const localizeDates = <T extends { startDate: string; endDate: string }>(
     item: T,
@@ -234,12 +236,12 @@ export function resumeToPreview(resume: Resume): ResumePreview {
         };
       },
     ),
-    skills: (sectionOfType(resume, "skills")?.entries ?? []).map((entry) => ({
+    skills: (skillsSection?.entries ?? []).map((entry) => ({
       id: entry.id,
       name: plain(entry.fields.name),
-      proficiency: plain(entry.fields.level),
+      proficiency: showSkillLevel ? plain(entry.fields.level) : "",
     })),
-    skillsColumns: sectionOfType(resume, "skills")?.columns ?? 2,
+    skillsColumns: skillsSection?.columns ?? 2,
     languages: (sectionOfType(resume, "languages")?.entries ?? []).map(
       (entry) => ({
         id: entry.id,
