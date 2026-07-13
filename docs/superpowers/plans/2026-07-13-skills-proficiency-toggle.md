@@ -378,16 +378,17 @@ git commit -m "feat(resume): hide skill proficiency in preview/PDF/docx when sho
 
 ---
 
-## Task 3: `SkillsLevelToggle` component and translations
+## Task 3: `SkillsLevelToggle` component, translations, and wiring into the Skills form
 
 **Files:**
 - Create: `src/components/editor/editor-sections/ed-section-skills/skills-level-toggle.tsx`
 - Modify: `messages/en.json`
 - Modify: `messages/id.json`
+- Modify: `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx`
 
 **Interfaces:**
 - Consumes: `Section.showLevel?: boolean` (Task 1), `useResumeStore` (`state.open`, `state.updateOpen` — see `src/lib/store/resume-store.ts:47,60`), `Switch` from `@/components/ui/switch`.
-- Produces: `export function SkillsLevelToggle(): JSX.Element` — a self-contained row (label + switch), consumed by Task 4.
+- Produces: `export function SkillsLevelToggle(): JSX.Element` — a self-contained row (label + switch), rendered by this task so the toggle is visible end-to-end; consumed further by Task 4 (which reads the same `showLevel` flag to hide the per-skill `Select`).
 
 - [ ] **Step 1: Add the translation keys**
 
@@ -456,33 +457,7 @@ npx biome check src/components/editor/editor-sections/ed-section-skills/skills-l
 
 Expected: both commands exit 0. (`checked`/`onCheckedChange` is confirmed against `@base-ui/react/switch`'s `SwitchRoot.Props` — `checked?: boolean`, `onCheckedChange?: (checked: boolean, eventDetails) => void`.)
 
-- [ ] **Step 4: Manual verification**
-
-```bash
-npm run dev
-```
-
-Open a résumé in the editor, expand the Skills accordion with at least one skill row present, and confirm the new "Show proficiency level" row renders next to "Columns" with a working switch (no wiring into the form yet, so toggling it won't visibly change the per-skill row — that's Task 4). Stop the dev server after confirming.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add src/components/editor/editor-sections/ed-section-skills/skills-level-toggle.tsx messages/en.json messages/id.json
-git commit -m "feat(editor): add SkillsLevelToggle component and its copy"
-```
-
----
-
-## Task 4: Wire the toggle into the Skills form
-
-**Files:**
-- Modify: `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx`
-- Modify: `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx`
-
-**Interfaces:**
-- Consumes: `SkillsLevelToggle` (Task 3), `Section.showLevel?: boolean` (Task 1).
-
-- [ ] **Step 1: Render `SkillsLevelToggle` in the Skills form**
+- [ ] **Step 4: Render `SkillsLevelToggle` in the Skills form**
 
 In `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx`, add the import next to the existing `SkillsColumnsToggle` import:
 
@@ -500,7 +475,41 @@ Then render it alongside `SkillsColumnsToggle` (same `fields.length > 0` branch,
             <SortableList
 ```
 
-- [ ] **Step 2: Hide the per-skill proficiency `Select` when the section's `showLevel` is off**
+- [ ] **Step 5: Typecheck and lint again (now covering the form file too)**
+
+```bash
+npx tsc --noEmit
+npx biome check src/components/editor/editor-sections/ed-section-skills/skills-level-toggle.tsx messages/en.json messages/id.json src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx
+```
+
+Expected: both commands exit 0.
+
+- [ ] **Step 6: Manual verification**
+
+```bash
+npm run dev
+```
+
+Open a résumé in the editor, expand the Skills accordion with at least one skill row present, and confirm the new "Show proficiency level" row renders next to "Columns" with a working switch that toggles on click (its state persists across a page reload, proving it's writing to the store). Toggling it won't yet change anything about the per-skill row itself — that's Task 4. Stop the dev server after confirming.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add src/components/editor/editor-sections/ed-section-skills/skills-level-toggle.tsx messages/en.json messages/id.json src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx
+git commit -m "feat(editor): add SkillsLevelToggle and render it in the Skills form"
+```
+
+---
+
+## Task 4: Hide the per-skill proficiency input when the section's level toggle is off
+
+**Files:**
+- Modify: `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx`
+
+**Interfaces:**
+- Consumes: `Section.showLevel?: boolean` (Task 1), `SkillsLevelToggle` already rendered in the Skills form (Task 3) — this task makes the per-skill row react to the flag that toggle writes.
+
+- [ ] **Step 1: Hide the per-skill proficiency `Select` when the section's `showLevel` is off**
 
 In `src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx`, add the `useResumeStore` import and read the flag the same way `SkillsColumnsToggle` does:
 
@@ -564,16 +573,16 @@ Then wrap the existing proficiency `Controller` block in a `showLevel &&` guard:
 
 Leave the rest of the file (the `PROFICIENCY_LEVELS` constant, the name `Input`, both remove `Button`s) untouched — the `level` value stays bound in the form/store even while its control is unmounted, so no data is lost when the toggle flips back on.
 
-- [ ] **Step 3: Typecheck and lint**
+- [ ] **Step 2: Typecheck and lint**
 
 ```bash
 npx tsc --noEmit
-npx biome check src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx
+npx biome check src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx
 ```
 
 Expected: both commands exit 0.
 
-- [ ] **Step 4: Manual verification in the browser**
+- [ ] **Step 3: Manual verification in the browser**
 
 ```bash
 npm run dev
@@ -587,9 +596,9 @@ In the editor, open a résumé with a couple of skills that already have profici
 
 Stop the dev server after confirming all four checks pass.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form.tsx src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx
+git add src/components/editor/editor-sections/ed-section-skills/ed-section-skills-form-item.tsx
 git commit -m "feat(editor): hide per-skill proficiency input when the section's level toggle is off"
 ```
