@@ -541,6 +541,7 @@
       "emptyDescription": "Tambahin alat dan teknologi yang kamu pakai.",
       "namePlaceholder": "TypeScript",
       "proficiency": "Tingkat",
+      "showLevelLabel": "Tampilkan tingkat kemahiran",
       "reorder": "Ubah urutan keahlian",
       "remove": "Hapus keahlian",
       "columnsLabel": "Kolom",

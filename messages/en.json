@@ -541,6 +541,7 @@
       "emptyDescription": "Add the tools and technologies you work with.",
       "namePlaceholder": "TypeScript",
       "proficiency": "Proficiency",
+      "showLevelLabel": "Show proficiency level",
       "reorder": "Reorder skill",
       "remove": "Remove skill",
       "columnsLabel": "Columns",

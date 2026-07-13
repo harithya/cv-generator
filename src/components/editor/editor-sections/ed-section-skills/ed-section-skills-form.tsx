@@ -22,6 +22,7 @@ import {
 } from "../resume-form-adapter";
 import { EditorSectionSkillsFormItem } from "./ed-section-skills-form-item";
 import { SkillsColumnsToggle } from "./skills-columns-toggle";
+import { SkillsLevelToggle } from "./skills-level-toggle";
 
 function emptySkill(): SkillItemValues {
   return { name: "", level: "" };
@@ -79,6 +80,7 @@ export function EditorSectionSkillsForm() {
         ) : (
           <>
             <SkillsColumnsToggle />
+            <SkillsLevelToggle />
             <SortableList
               items={fields.map((field) => field.id)}
               onReorder={handleReorder}
