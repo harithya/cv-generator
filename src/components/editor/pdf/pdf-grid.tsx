@@ -31,7 +31,7 @@ export function PdfGrid(props: {
   items: (SkillItemView | LanguageItemView)[];
   columns?: SectionColumns;
 }) {
-  const width = props.columns === 1 ? "100%" : "50%";
+  const width = `${(100 / (props.columns ?? 2)).toFixed(2)}%`;
   return (
     <View style={styles.grid}>
       {props.items.map((item) => (

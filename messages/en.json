@@ -545,10 +545,7 @@
       "reorder": "Reorder skill",
       "remove": "Remove skill",
       "columnsLabel": "Columns",
-      "columnsOne": "1",
-      "columnsOneAria": "One column",
-      "columnsTwo": "2",
-      "columnsTwoAria": "Two columns"
+      "columnsAria": "{count, plural, one {One column} other {# columns}}"
     },
     "languages": {
       "accordionTitle": "Languages",

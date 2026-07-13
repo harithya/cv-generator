@@ -15,7 +15,7 @@ export type ResumeLanguage = "en" | "id";
  * on-screen preview and PDF visual layout only; it never changes reading order,
  * and inherently linear exports (docx, plain text) ignore it.
  */
-export type SectionColumns = 1 | 2;
+export type SectionColumns = 1 | 2 | 3 | 4 | 5 | 6;
 
 export type FieldKind = "plain" | "richtext";
 

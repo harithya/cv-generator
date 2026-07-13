@@ -545,10 +545,7 @@
       "reorder": "Ubah urutan keahlian",
       "remove": "Hapus keahlian",
       "columnsLabel": "Kolom",
-      "columnsOne": "1",
-      "columnsOneAria": "Satu kolom",
-      "columnsTwo": "2",
-      "columnsTwoAria": "Dua kolom"
+      "columnsAria": "{count, plural, other {# kolom}}"
     },
     "languages": {
       "accordionTitle": "Bahasa",
